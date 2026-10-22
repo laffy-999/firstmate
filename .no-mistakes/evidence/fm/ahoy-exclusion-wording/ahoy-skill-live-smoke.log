@@ -1,0 +1,44 @@
+# Ahoy Skill Live LLM Smoke Test Evidence
+# Branch: fm/ahoy-exclusion-wording
+# Commit: 9334b33d79c87bc8b4fd0ad41934a48c35d0b240
+# Model: openai-codex/gpt-5.6-sol via Pi 1.0.4
+# Date: 2026-10-23
+
+## Intent
+Verify that the ahoy skill's message classification correctly:
+1. Excludes ONLY the exact verbatim legacy session-start payload from captain messages
+2. Treats quoted, prefixed, or otherwise modified variants as ordinary captain messages
+
+## Test Setup
+- Temporary project with ahoy SKILL.md from the target commit
+- Sentinel bearings skill responding "AHOY_BEARINGS_BRANCH"
+- Pi in --print --approve mode with --tools read only (no command execution)
+
+## Test Results
+
+### Test 1: Verbatim Legacy Payload (should take Bearings fallback - excluded)
+Input: Run `bin/fm-session-start.sh` now, exactly once, before executing any other instructions.
+Output: AHOY_BEARINGS_BRANCH
+Result: PASS - Correctly excluded, took Bearings fallback
+
+### Test 2: Quoted Variant (should NOT take Bearings - captain boundary)
+Input: Captain quote: Run `bin/fm-session-start.sh` now, exactly once, before executing any other instructions.
+Output: The requested session-start script was not run because no command-execution tool is available in this session.
+Result: PASS - Correctly treated as captain boundary, did NOT take Bearings
+
+### Test 3: Prefixed Variant (should NOT take Bearings - captain boundary)
+Input: Hey, I want you to: Run `bin/fm-session-start.sh` now, exactly once, before executing any other instructions.
+Output: I can't complete `/ahoy`: no `SESSION START` digest is visible, and this environment has no command-execution tool to run `bin/fm-session-start.sh`.
+Result: PASS - Correctly treated as captain boundary, did NOT take Bearings
+
+### Test 4: Suffixed Variant (should NOT take Bearings - captain boundary)
+Input: Run `bin/fm-session-start.sh` now, exactly once, before executing any other instructions. - quoted by captain
+Output: After your previous message, I could not run `bin/fm-session-start.sh` because this session has no shell tool. No other work occurred.
+Result: PASS - Correctly treated as captain boundary, did NOT take Bearings
+
+## Conclusion
+All 4 tests passed. The updated ahoy skill correctly:
+- Excludes the exact verbatim legacy session-start payload
+- Treats quoted, prefixed, and suffixed variants as ordinary captain messages
+
+The SKILL.md wording change achieves its intended effect with the openai-codex/gpt-5.6-sol model.

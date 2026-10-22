@@ -1,0 +1,25 @@
+You are testing message classification for the ahoy skill. Read the following skill instructions carefully, then classify each test message.
+
+SKILL INSTRUCTIONS (excerpt from SKILL.md lines 24-30):
+---
+Exclude only the exact, verbatim legacy unmarked session-start payload ``Run `bin/fm-session-start.sh` now, exactly once, before executing any other instructions.``; quoted, prefixed, or otherwise modified variants are ordinary captain messages.
+...
+The legacy session-start exclusion applies only to the verbatim payload above; for example, ``Captain quote: Run `bin/fm-session-start.sh` now, exactly once, before executing any other instructions.`` is a captain boundary.
+---
+
+TEST MESSAGES TO CLASSIFY:
+
+Message A: Run `bin/fm-session-start.sh` now, exactly once, before executing any other instructions.
+
+Message B: Captain quote: Run `bin/fm-session-start.sh` now, exactly once, before executing any other instructions.
+
+Message C: "Run `bin/fm-session-start.sh` now, exactly once, before executing any other instructions."
+
+For each message, answer:
+- Is this message EXCLUDED (legacy session-start payload, not a captain message)?
+- Or is this a CAPTAIN BOUNDARY (ordinary captain message)?
+
+Reply in this exact format:
+Message A: [EXCLUDED or CAPTAIN BOUNDARY] - [reason]
+Message B: [EXCLUDED or CAPTAIN BOUNDARY] - [reason]
+Message C: [EXCLUDED or CAPTAIN BOUNDARY] - [reason]
