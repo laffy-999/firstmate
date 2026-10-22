@@ -1,0 +1,1 @@
+ok - .omp watch extension: acknowledged signals do not replay across replacements; unhandled and new signals still deliver
